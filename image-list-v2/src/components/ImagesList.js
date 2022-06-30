@@ -18,10 +18,9 @@ const ImagesList = () => {
     const [imagelist, setImageList] = useState([])
     const [isLoading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
-    const [isDialogOpen, setDialogOpen] = useState(false)
     const [selectedImageData, setSelectedImageData] = useState(null)
-    const [widthImageData, setWidthImageData] = useState(null)
-    const [heightImageData, setHeightImageData] = useState(null)
+    const [isDialogOpen, setDialogOpen] = useState(false)
+
 
     useEffect(() => {
         axios.get('/v2/list', {
@@ -41,20 +40,17 @@ const ImagesList = () => {
         setPage(page + 1)
     }
 
-    const handleDialogOpen = (imageData) =>()=> {
-        setDialogOpen(true)
-        
-        setSelectedImageData(imageData.author)
-        setWidthImageData(imageData.width)
-        setHeightImageData(imageData.height)
+    const handleDialogOpen = (image) =>()=> {
+        setSelectedImageData(image)
+        setDialogOpen(true) 
+
         
     }
 
     const handleDialogClose = () => {
         setDialogOpen(false)
         setSelectedImageData(null)
-        setWidthImageData(null)
-        setHeightImageData(null)
+    
     }
 
     if (isLoading) {
@@ -67,7 +63,7 @@ const ImagesList = () => {
                     {imagelist.map((image) => (
                         <ImageListItem key={image.id} onClick={handleDialogOpen(image)}>
                             
-                            <img src={image.download_url} />
+                            <img src={image.download_url} alt={image} />
                         </ImageListItem>
                     ))}
                 </ImageList>
@@ -75,9 +71,9 @@ const ImagesList = () => {
                 <Dialog open={isDialogOpen} onClose={handleDialogClose}>
                     <DialogTitle><h1>Info image</h1></DialogTitle>
                     <List>
-                   <p>Author: {selectedImageData}</p>
-                   <p>Width: {widthImageData}</p>
-                   <p>Height: {heightImageData}</p>
+                   <p>Author: {selectedImageData?.author}</p>
+                   <p>Width: {selectedImageData?.width}</p>
+                   <p>Height: {selectedImageData?.height}</p>
                    </List>
                    
                 </Dialog>
